@@ -8,9 +8,13 @@ const client = new S3Client({ region: "us-east-1" });
 export const main = async (event) => {
 	// Read message from SQS
 	const body = JSON.parse(event.Records[0].body);
-	if (!body.fileName || !body.objectKey || !body.userId) {
+	if (!body.fileName || !body.objectKey || (!body.userID && !body.groupID)) {
 		throw new Error("Required input parameter missing from event body: ", event.Records[0].body);
 	}
+	// SQS event has either userID or groupID parameter, decide which one we use
+	const urlComponent = body.userID ? "users" : "groups";
+	const urlId = body.userID || body.groupID;
+
 	var getCommandParams = {
 		Bucket: config.BUCKET,
 		Key: body.fileName
@@ -21,13 +25,13 @@ export const main = async (event) => {
 	// Run PDF-worked
 	const extractedFullText = await extractFulltext(data);
 
-	// Hit /items/i:objectUserID/:objectKey/fulltext endpoint of dataserver with 3 retries
+	// Hit users|groups/{id}/items/:objectKey/fulltext endpoint of dataserver with 3 retries
 	let success = false;
 	let attempts = 0;
 	let response;
 	while (!success && attempts < 3) {
 		try {
-			response = await fetch(config.DATASERVER_URL + `/items/${body.userId}/${body.objectKey}/fulltext`, {
+			response = await fetch(config.DATASERVER_URL + `/${urlComponent}/${urlId}/items/${body.objectKey}/fulltext`, {
 				method: 'put',
 				body: JSON.stringify({ content: extractFulltext.text }),
 				headers: {
@@ -45,10 +49,11 @@ export const main = async (event) => {
 	}
 
 	// Break if we didn't succeed
-	if (!success || response.status != 200) {
+	if (!success || response.status != 204) {
 		let message = "";
 		if (response) {
-			message = await response.text();
+			message += `Status: ${response.status}|`;
+			message += await response.text();
 		}
 		throw new Error(`Request to dataserver failed. ${message}`);
 	}
