@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  full-text-extractor {{ node_env }}
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  ProcessSQS:
+    Type: AWS::Serverless::Function
+    Properties:
+        FunctionName: {{ main_function_name }}
+        Handler: src/main.main
+        Runtime: nodejs16.x
+        Timeout: {{ timeout }}
+        MemorySize: {{ memory_size }}
+        CodeUri: src/
+        Policies:
+        - S3ReadPolicy:
+            BucketName: {{ bucket_name }}
+        Events:
+          DataserverSQSEvent:
+            Type: SQS
+            Properties:
+              Queue: !GetAtt DataserverQueue.Arn
+              BatchSize: 1
+
+  DataserverQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: {{ visibility_timeout }}

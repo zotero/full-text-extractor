@@ -33,7 +33,7 @@ export const main = async (event) => {
 		try {
 			response = await fetch(config.DATASERVER_URL + `/${urlComponent}/${urlId}/items/${body.objectKey}/fulltext`, {
 				method: 'put',
-				body: JSON.stringify({ content: extractFulltext.text }),
+				body: JSON.stringify({ content: extractedFullText.text }),
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'Basic ' + Buffer.from(config.rootUsername + ":" + config.rootPassword).toString('base64')
