@@ -9,7 +9,7 @@ import { main } from "./main.mjs";
 const sqsClient = new SQSClient();
 const queueURL = config.get('sqsURL');
 
-(async () => {
+export const localInvoke = async () => {
 	const messages = await sqsClient.send(new ReceiveMessageCommand({ QueueUrl: queueURL, MaxNumberOfMessages: 10 }));
 	console.log(messages);
 	const event = { Records: [] };
@@ -25,6 +25,6 @@ const queueURL = config.get('sqsURL');
 		});
 	}
 	await main(event);
-})();
+};
 
 
