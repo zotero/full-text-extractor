@@ -14,7 +14,7 @@ Resources:
         Runtime: nodejs16.x
         Timeout: {{ timeout }}
         MemorySize: {{ memory_size }}
-        CodeUri: src/
+        CodeUri: ./
         Policies:
         - S3ReadPolicy:
             BucketName: {{ bucket_name }}
@@ -24,6 +24,13 @@ Resources:
             Properties:
               Queue: !GetAtt DataserverQueue.Arn
               BatchSize: 1
+    LogGroup:
+        Type: AWS::Logs::LogGroup
+        DeletionPolicy: Retain
+        Properties:
+        LogGroupName:
+            Fn::Sub: /aws/lambda/${ProcessSQS}
+        RetentionInDays: 14
 
   DataserverQueue:
     Type: AWS::SQS::Queue

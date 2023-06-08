@@ -3,3 +3,5 @@ config/local.json
 config.env
 global.env
 package
+generate_template.sh
+template.yaml
