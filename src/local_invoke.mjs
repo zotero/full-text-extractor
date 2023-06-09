@@ -11,13 +11,8 @@ const queueURL = config.get('sqsURL');
 
 export const localInvoke = async () => {
 	const messages = await sqsClient.send(new ReceiveMessageCommand({ QueueUrl: queueURL, MaxNumberOfMessages: 10 }));
-	console.log(messages);
 	const event = { Records: [] };
-	if (!messages.Messages) {
-		console.log("No messages");
-		return;
-	}
-	for (let m of messages.Messages) {
+	for (let m of messages?.Messages || []) {
 		event.Records.push({
 			messageId: m.MessageId,
 			receiptHandle: m.ReceiptHandle,
@@ -25,6 +20,7 @@ export const localInvoke = async () => {
 		});
 	}
 	await main(event);
+	return event.Records.length;
 };
 
 
