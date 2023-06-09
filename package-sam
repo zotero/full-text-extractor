@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+rsync -a --exclude pdf-worker/pdf.js --exclude package --exclude .git ./ package/
+mkdir package/pdf-worker/pdf.js
+cp -r pdf-worker/pdf.js/build package/pdf-worker/pdf.js/build
