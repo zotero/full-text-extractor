@@ -34,7 +34,7 @@ export const main = async (event) => {
 		let response;
 		while (!success && attempts < 3) {
 			try {
-				const url = config.apiURLPrefix + `/${urlComponent}/${urlId}/items/${body.itemKey}/fulltext`;
+				const url = config.apiURLPrefix + `${urlComponent}/${urlId}/items/${body.itemKey}/fulltext`;
 				response = await fetch(url, {
 					method: 'put',
 					body: JSON.stringify({ content: extractedFullText.text }),
