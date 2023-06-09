@@ -7,7 +7,9 @@
         "@aws-sdk/client-s3": "^3.347.1",
         "@aws-sdk/client-sqs": "^3.348.0",
         "config": "^3.3.9",
-        "node-fetch": "^3.3.1"
+        "node-fetch": "^3.3.1",
+        "pdf-worker": "file:pdf-worker",
+        "pdf.js": "file:pdf-worker/pdf.js"
     },
     "devDependencies": {
         "aws-sdk-client-mock": "^2.0.0"
@@ -15,6 +17,6 @@
     "scripts": {
         "test_user_id": "sam local invoke ProcessSQS -e events/event-sqs-userId.json",
         "test_group_id": "sam local invoke ProcessSQS -e events/event-sqs-groupId.json",
-		"local_invoke": "node src/local_invoke.mjs"
+        "local_invoke": "node src/local_invoke.mjs"
     }
 }

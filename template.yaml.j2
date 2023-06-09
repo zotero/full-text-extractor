@@ -10,11 +10,10 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
         FunctionName: {{ main_function_name }}
-        Handler: src/main.main
-        Runtime: nodejs16.x
+        PackageType: Image
+        ImageUri: {{ docker_registry }}/full-text-extractor:{{ env("docker_tag") }}
         Timeout: {{ timeout }}
         MemorySize: {{ memory_size }}
-        CodeUri: ./
         Policies:
         - S3ReadPolicy:
             BucketName: {{ bucket_name }}
