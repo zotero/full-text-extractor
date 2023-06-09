@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import config from "config";
 const s3Client = new S3Client({ region: "us-east-1" });
 const sqsClient = new SQSClient();
-const queueURL = config.get('sqsURL');
+const queueURL = config.get('fullTextExtractorSQSUrl');
 
 export const main = async (event) => {
 	// Read message from SQS
@@ -19,7 +19,7 @@ export const main = async (event) => {
 		const urlId = body.userID || body.groupID;
 	
 		var getCommandParams = {
-			Bucket: config.BUCKET,
+			Bucket: config.s3Bucket,
 			Key: body.fileName
 		};
 		// Get file from S3
@@ -34,7 +34,7 @@ export const main = async (event) => {
 		let response;
 		while (!success && attempts < 3) {
 			try {
-				const url = config.DATASERVER_URL + `/${urlComponent}/${urlId}/items/${body.itemKey}/fulltext`;
+				const url = config.apiURLPrefix + `/${urlComponent}/${urlId}/items/${body.itemKey}/fulltext`;
 				response = await fetch(url, {
 					method: 'put',
 					body: JSON.stringify({ content: extractedFullText.text }),

@@ -1,7 +1,7 @@
 {
-	"BUCKET" : "",
-	"DATASERVER_URL" : "",
+	"s3Bucket" : "",
+	"apiURLPrefix" : "",
 	"rootUsername" : "",
 	"rootPassword" : "",
-	"sqsURL" : ""
+	"fullTextExtractorSQSUrl" : ""
 }

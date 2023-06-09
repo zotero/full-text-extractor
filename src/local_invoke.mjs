@@ -7,7 +7,7 @@ import { SQSClient, ReceiveMessageCommand } from "@aws-sdk/client-sqs";
 import config from "config";
 import { main } from "./main.mjs";
 const sqsClient = new SQSClient();
-const queueURL = config.get('sqsURL');
+const queueURL = config.get('fullTextExtractorSQSUrl');
 
 export const localInvoke = async () => {
 	const messages = await sqsClient.send(new ReceiveMessageCommand({ QueueUrl: queueURL, MaxNumberOfMessages: 10 }));
