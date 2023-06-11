@@ -19,7 +19,8 @@ export const localInvoke = async () => {
 			body: m.Body
 		});
 	}
-	await main(event);
+	const batchFailures = await main(event);
+	console.log(batchFailures);
 	return event.Records.length;
 };
 

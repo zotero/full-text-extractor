@@ -23,7 +23,9 @@ Resources:
             Type: SQS
             Properties:
               Queue: !GetAtt DataserverQueue.Arn
-              BatchSize: 1
+              BatchSize: {{ batch_size }}
+              FunctionResponseTypes:
+                - ReportBatchItemFailures
     LogGroup:
         Type: AWS::Logs::LogGroup
         DeletionPolicy: Retain
