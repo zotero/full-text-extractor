@@ -47,9 +47,10 @@ export const main = async function (event) {
 					success = true;
 				}
 				catch (e) {
-					console.log(e);
-					await new Promise(r => setTimeout(r, 2000));
 					attempts += 1;
+					if (attempts < 3) {
+						await new Promise(r => setTimeout(r, 2000));
+					}
 				}
 			}
 	
